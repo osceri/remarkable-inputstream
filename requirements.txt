@@ -4,8 +4,10 @@ numpy==2.2.3
 PyAutoGUI==0.9.54
 PyGetWindow==0.0.9
 PyMsgBox==1.0.9
+pynput==1.7.8
 pyperclip==1.9.0
 PyRect==0.2.0
 PyScreeze==1.0.1
 python3-xlib==0.15
 pytweening==1.2.0
+six==1.17.0

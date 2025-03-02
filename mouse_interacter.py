@@ -1,6 +1,7 @@
-import os
 import platform
+import os
 from abc import ABC, abstractmethod
+from pynput.mouse import Controller, Button
 
 class MouseInteracter(ABC):
     @abstractmethod
@@ -25,10 +26,28 @@ class XdotoolMouseInteracter(MouseInteracter):
     def mouse_up(self) -> None:
         os.system("xdotool mouseup 1")
 
+class PynputMouseInteracter(MouseInteracter):
+    def __init__(self):
+        self.mouse = Controller()
+
+    def move(self, x: int, y: int) -> None:
+        self.mouse.position = (x, y)
+
+    def mouse_down(self) -> None:
+        self.mouse.press(Button.left)
+
+    def mouse_up(self) -> None:
+        self.mouse.release(Button.left)
 
 def get_mouse_interacter() -> MouseInteracter:
     match platform.system():
         case "Linux":
             return XdotoolMouseInteracter()
         case _:
-            raise NotImplementedError("Only Linux is supported for now")
+            return PynputMouseInteracter()
+
+# Example usage
+if __name__ == "__main__":
+    mouse = get_mouse_interacter()
+    for i in range(40):
+        mouse.move(100 + i, 100 + 2 * i)

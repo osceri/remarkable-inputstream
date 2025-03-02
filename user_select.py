@@ -1,6 +1,4 @@
 import tkinter as tk
-import platform
-from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 @dataclass
@@ -10,12 +8,7 @@ class BoundingBox:
     x_max: int
     y_max: int
 
-class UserSelect(ABC):
-    @abstractmethod
-    def get_bounding_box(self) -> BoundingBox:
-        pass
-
-class UserSelectUbuntu(UserSelect):
+class UserSelect:
     def __init__(self, root):
         self.root = root
         self.root.title("Screen Capture")
@@ -90,16 +83,11 @@ class UserSelectUbuntu(UserSelect):
         """Returns the selected coordinates after the mainloop finishes."""
         return self.bounding_box
 
-def UserSelect() -> BoundingBox:
+def user_select() -> BoundingBox:
     # Initialize Tkinter root window
     root = tk.Tk()
 
-    # Create and start the application
-    match platform.system():
-        case "Linux":
-            app = UserSelectUbuntu(root)
-        case _:
-            raise NotImplementedError("This platform is not supported yet.")
+    app = UserSelect(root)
 
     # Start the Tkinter main loop
     root.mainloop()
@@ -111,5 +99,5 @@ def UserSelect() -> BoundingBox:
     return bounding_box
 
 if __name__ == "__main__":
-    bounding_box = UserSelect()
+    bounding_box = user_select()
     print(bounding_box)

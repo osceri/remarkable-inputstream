@@ -5,16 +5,16 @@ Prerequisites:
 1. The reMarkable and the host computer are connected to the same network.
 2. The reMarkable is connected to the host computer via USB.
 3. You have uploaded an authorized ssh key to the reMarkable.
-4. You have either xdotool or another mouse-interaction tool installed on the host computer.
 """
 import socket
 import struct
 import subprocess
+import platform
 from threading import Thread
 from time import time, sleep
 from itertools import count
 from typing import Iterable
-from user_select import UserSelect, BoundingBox
+from user_select import user_select, BoundingBox
 from mouse_interacter import MouseInteracter, get_mouse_interacter
 
 
@@ -80,15 +80,19 @@ def rm_T_wm(
         )
     return x_wm, y_wm
 
-
 def launch_remarkable_inputstream_source(host: str, remote: str, port: str | int) -> None:
     """
     Run the command to forward the touch screen events to the host.
     """
     sleep(0.5)
-    command = f"ssh root@{remote} 'cat /dev/input/touchscreen0 | nc {host} {port}'"
+    match platform.system():
+        case "Linux":
+            command = f"ssh root@{remote} 'cat /dev/input/touchscreen0 | nc {host} {port}'"
+        case "Windows":
+            command = f'ssh root@{remote} "cat /dev/input/touchscreen0 | nc {host} {port}"'
+        case _:
+            raise NotImplementedError(f"Unsupported platform: {platform.system()}")
     subprocess.Popen(command, shell=True)
-
 
 def launch_remarkable_inputstream_target(
     preconn: socket.socket, host: str, remote: str, port_iterator: Iterable[int]
@@ -118,7 +122,7 @@ def app(host: str, remote: str, portrait_mode: bool = False):
     port_iter = count(12345)  # start from 12345 and increment by 1
 
     rm = BoundingBox(x_min=0, y_min=0, x_max=20966, y_max=15725)
-    wm: BoundingBox = UserSelect()
+    wm: BoundingBox = user_select()
 
     mouse_interacter: MouseInteracter = get_mouse_interacter()
 
@@ -151,7 +155,7 @@ def app(host: str, remote: str, portrait_mode: bool = False):
 
 if __name__ == "__main__":
     app(
-        host="10.11.99.8", 
+        host="10.11.99.6", 
         remote="10.11.99.1", 
         portrait_mode=True
     )
