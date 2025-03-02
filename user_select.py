@@ -56,9 +56,11 @@ class UserSelectUbuntu(UserSelect):
         # Draw the initial rectangle outline
         if self.rect_id:
             self.canvas.delete(self.rect_id)
+        # I want the rectangle to be white but transparent
         self.rect_id = self.canvas.create_rectangle(
             self.start_x, self.start_y, self.start_x, self.start_y,
-            outline="white", width=2
+            outline="white", width=2,
+            stipple="gray50", fill="white"
         )
 
     def _on_mouse_drag(self, event):
