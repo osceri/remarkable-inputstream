@@ -117,6 +117,7 @@ class PynputMouseInteracter(MouseInteracter):
 
 def get_mouse_interacter() -> MouseInteracter:
     system = platform.system()
+    print("Creating mouse interacter for", system)
     
     match system:
         case "Linux":

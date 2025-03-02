@@ -85,13 +85,7 @@ def launch_remarkable_inputstream_source(host: str, remote: str, port: str | int
     Run the command to forward the touch screen events to the host.
     """
     sleep(0.5)
-    match platform.system():
-        case "Linux":
-            command = f"ssh root@{remote} 'cat /dev/input/touchscreen0 | nc {host} {port}'"
-        case "Windows":
-            command = f'ssh root@{remote} "cat /dev/input/touchscreen0 | nc {host} {port}"'
-        case _:
-            raise NotImplementedError(f"Unsupported platform: {platform.system()}")
+    command = f"ssh root@{remote} 'cat /dev/input/touchscreen0 | nc {host} {port}'"
     subprocess.Popen(command, shell=True)
 
 def launch_remarkable_inputstream_target(
@@ -132,7 +126,7 @@ def app(host: str, remote: str, portrait_mode: bool = False):
         conn = launch_remarkable_inputstream_target(preconn, host, remote, port_iter)
         conn.settimeout(0.1)
 
-        interval = Interval(interval_length_ms=4)
+        interval = Interval(interval_length_ms=16)
 
         while True:
             try:
@@ -157,7 +151,7 @@ def app(host: str, remote: str, portrait_mode: bool = False):
 
 if __name__ == "__main__":
     app(
-        host="10.11.99.6", 
+        host="10.11.99.8", 
         remote="10.11.99.1", 
         portrait_mode=True
     )
