@@ -82,7 +82,7 @@ def rm_T_wm(
     return x_wm, y_wm
 
 
-def remarkable_datastream(host: str, remote: str, port: str | int) -> None:
+def launch_remarkable_inputstream_source(host: str, remote: str, port: str | int) -> None:
     """
     Run the command to forward the touch screen events to the host.
     """
@@ -91,7 +91,7 @@ def remarkable_datastream(host: str, remote: str, port: str | int) -> None:
     subprocess.Popen(command, shell=True)
 
 
-def connect_to_port(
+def launch_remarkable_inputstream_target(
     preconn: socket.socket, host: str, remote: str, port_iterator: Iterable[int]
 ) -> socket.socket:
     """
@@ -104,7 +104,7 @@ def connect_to_port(
         except OSError:
             pass
 
-    thread = Thread(target=remarkable_datastream, args=(host, remote, port))
+    thread = Thread(target=launch_remarkable_inputstream_source, args=(host, remote, port))
     thread.start()
 
     preconn.listen(1)
