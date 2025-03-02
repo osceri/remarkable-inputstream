@@ -10,4 +10,5 @@ PyRect==0.2.0
 PyScreeze==1.0.1
 python3-xlib==0.15
 pytweening==1.2.0
+screeninfo==0.8.1
 six==1.17.0
