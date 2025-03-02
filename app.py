@@ -10,7 +10,6 @@ Prerequisites:
 import socket
 import struct
 import subprocess
-import os
 from threading import Thread
 from time import time, sleep
 from itertools import count
