@@ -111,6 +111,7 @@ def launch_remarkable_inputstream_target(
     thread.start()
 
     preconn.listen(1)
+    preconn.settimeout(5) # 5 seconds timeout
     conn, addr = preconn.accept()
     print(f"Connected by {addr}")
     return conn
@@ -129,15 +130,16 @@ def app(host: str, remote: str, portrait_mode: bool = False):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as preconn:
         state = State()
         conn = launch_remarkable_inputstream_target(preconn, host, remote, port_iter)
+        conn.settimeout(0.1)
 
-        interval = Interval(interval_length_ms=16)
+        interval = Interval(interval_length_ms=4)
 
         while True:
-            data = conn.recv(16)  # Read 16-byte event packets
-            if not data:
-                break
-
-            state.unpack(data)
+            try:
+                data = conn.recv(16)  # Read 16-byte event packets
+                state.unpack(data)
+            except TimeoutError:
+                pass
 
             if not interval.has_elapsed():
                 continue
