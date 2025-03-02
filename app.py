@@ -125,7 +125,7 @@ def app(host: str, remote: str, portrait_mode: bool = False):
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as preconn:
         state = State()
-        conn = connect_to_port(preconn, host, remote, port_iter)
+        conn = launch_remarkable_inputstream_target(preconn, host, remote, port_iter)
 
         interval = Interval(interval_length_ms=16)
 
