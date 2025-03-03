@@ -16,6 +16,7 @@ from itertools import count
 from typing import Iterable
 from user_select import user_select, BoundingBox
 from mouse_interacter import MouseInteracter, get_mouse_interacter
+from device_finder import get_remarkable_ip, get_local_ip
 
 
 class State:
@@ -151,7 +152,7 @@ def app(host: str, remote: str, portrait_mode: bool = False):
 
 if __name__ == "__main__":
     app(
-        host="10.11.99.8", 
-        remote="10.11.99.1", 
-        portrait_mode=True
+        host=get_local_ip(),
+        remote=get_remarkable_ip(),
+        portrait_mode=False
     )
